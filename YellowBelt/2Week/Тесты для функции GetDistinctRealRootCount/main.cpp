@@ -93,14 +93,65 @@ private:
   int fail_count = 0;
 };
 
-int GetDistinctRealRootCount(double a, double b, double c) {
-  // Р’С‹ РјРѕР¶РµС‚Рµ РІСЃС‚Р°РІР»СЏС‚СЊ СЃСЋРґР° СЂР°Р·Р»РёС‡РЅС‹Рµ СЂРµР°Р»РёР·Р°С†РёРё С„СѓРЅРєС†РёРё,
-  // С‡С‚РѕР±С‹ РїСЂРѕРІРµСЂРёС‚СЊ, С‡С‚Рѕ РІР°С€Рё С‚РµСЃС‚С‹ РїСЂРѕРїСѓСЃРєР°СЋС‚ РєРѕСЂСЂРµРєС‚РЅС‹Р№ РєРѕРґ
-  // Рё Р»РѕРІСЏС‚ РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№
+
+int Line (const int& b, const int& c) {
+    if (b != 0) {
+        return 1;
+    } else {
+        return 0;
+    }     
 }
+int Quadro (const int& a, const int& b, const int& c) {
+    int D;
+    D = b * b - 4 * a * c;
+    if (D == 0) {
+        return 1;
+    } else if (D > 0) {
+        return 2;
+    } else {
+        return 0;
+    }
+}
+int GetDistinctRealRootCount(double a, double b, double c) {
+    if (a == 0) {
+        return Line(b, c);
+    } else {
+        return Quadro (a, b, c);
+    }
+ 
+}
+
+void ZeroA (){
+   AssertEqual(GetDistinctRealRootCount(0, 1, 1), 1, "A  = 0");
+   AssertEqual(GetDistinctRealRootCount(0, 1, -1), 1, "A  = 0");
+   AssertEqual(GetDistinctRealRootCount(0, 2, -6), 1, "A  = 0");
+   AssertEqual(GetDistinctRealRootCount(0, 7, -7), 1, "A  = 0");
+   AssertEqual(GetDistinctRealRootCount(0, 48, 256), 1, "A  = 0");
+}
+
+void ZeroAC () {
+   AssertEqual(GetDistinctRealRootCount(0, -101, 0), 1, "A and C = 0");
+   AssertEqual(GetDistinctRealRootCount(0, 1, 0), 1, "A and C = 0");
+   AssertEqual(GetDistinctRealRootCount(0, -2, 0), 1, "A and C = 0");
+   AssertEqual(GetDistinctRealRootCount(0, 48, 0), 1, "A and C = 0");
+}
+
+void ABC () {    
+   AssertEqual(GetDistinctRealRootCount(9, 1, 1), 0, "ABC1");
+   AssertEqual(GetDistinctRealRootCount(-9, 1, -1), 0, "ABC2");
+   AssertEqual(GetDistinctRealRootCount(13, 2, -6), 2, "ABC3");
+   AssertEqual(GetDistinctRealRootCount(13, -7, -7), 2, "ABC4");
+   AssertEqual(GetDistinctRealRootCount(2, 4, 2), 1, "ABC6");
+}
+
+
 
 int main() {
   TestRunner runner;
-  // РґРѕР±Р°РІСЊС‚Рµ СЃСЋРґР° СЃРІРѕРё С‚РµСЃС‚С‹
+  runner.RunTest(ZeroA, "ZeroA");
+  runner.RunTest(ZeroAC, "ZeroAC");
+  runner.RunTest(ABC, "ABC");
+
+  
   return 0;
 }
