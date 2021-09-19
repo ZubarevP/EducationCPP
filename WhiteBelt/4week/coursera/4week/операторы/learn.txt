@@ -1,0 +1,79 @@
+/*
+ * Created by Zubarev Pavel
+ */
+
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <vector>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+struct Duration {
+	int hour;
+	int min;
+
+	Duration (int h = 0, int m = 0) {
+		int total = h * 60 + m;
+		hour = total / 60;
+		min = total % 60
+				;
+	}
+};
+
+istream& operator>> (istream& stream, Duration& duration) {
+	stream >> duration.hour;
+	stream.ignore(1);
+	stream >> duration.min;
+	return stream;
+}
+
+ostream& operator<< (ostream& stream, const Duration& duration) {
+stream << setfill('0');
+stream << setw(2) << duration.hour << ':' << setw(2) << duration.min;
+return stream;
+}
+
+Duration operator+ (const Duration& first, const Duration& second) {
+	return Duration(first.hour + second.hour, first.min + second.min);
+}
+
+bool operator< (const Duration& lhs, const Duration& rhs) {
+	if (lhs.hour == rhs.hour) {
+		return lhs.min < rhs.min;
+	}
+	return lhs.hour < rhs.hour;
+}
+
+
+void Printvector (const vector<Duration> var) {
+	for (const auto& LL : var) {
+		cout << LL << ' ';
+	}
+	cout << endl;
+}
+
+int main () {
+
+	stringstream clock("01:50 02:30");
+	Duration dur1;
+	Duration dur2;
+	clock >> dur1;
+	clock >> dur2;
+	Duration dur3 = dur1 + dur2;
+	cout << dur1 << endl;
+	cout << dur2  << endl;
+	cout << dur1 + dur2 << endl;
+	vector<Duration> v {dur3, dur2, dur1};
+	sort(begin(v), end(v));
+	Printvector(v);
+
+	return 0;
+}
+
+
+
+
+
