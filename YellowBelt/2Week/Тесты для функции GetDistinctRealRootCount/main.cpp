@@ -94,15 +94,15 @@ private:
 };
 
 
-int Line (const int& b, const int& c) {
+int Line (const double& b, const double& c) {
     if (b != 0) {
         return 1;
     } else {
         return 0;
     }     
 }
-int Quadro (const int& a, const int& b, const int& c) {
-    int D;
+int Quadro (const double& a, const double& b, const double& c) {
+    double D;
     D = b * b - 4 * a * c;
     if (D == 0) {
         return 1;
@@ -122,18 +122,28 @@ int GetDistinctRealRootCount(double a, double b, double c) {
 }
 
 void ZeroA (){
-   AssertEqual(GetDistinctRealRootCount(0, 1, 1), 1, "A  = 0");
-   AssertEqual(GetDistinctRealRootCount(0, 1, -1), 1, "A  = 0");
-   AssertEqual(GetDistinctRealRootCount(0, 2, -6), 1, "A  = 0");
-   AssertEqual(GetDistinctRealRootCount(0, 7, -7), 1, "A  = 0");
-   AssertEqual(GetDistinctRealRootCount(0, 48, 256), 1, "A  = 0");
+   AssertEqual(GetDistinctRealRootCount(0, 1, 1), 1, "A  = 0 - 1");
+   AssertEqual(GetDistinctRealRootCount(0, 1, -1), 1, "A  = 0 - 2");
+   AssertEqual(GetDistinctRealRootCount(0, -2, 6), 1, "A  = 0 - 3");
+   AssertEqual(GetDistinctRealRootCount(0, -7, -7), 1, "A  = 0 - 4");
+   AssertEqual(GetDistinctRealRootCount(0, 48.2, 256.89897878), 1, "A  = 0 - 5");
+   AssertEqual(GetDistinctRealRootCount(0, 48, 256.78), 1, "A  = 0 - 6");
+   AssertEqual(GetDistinctRealRootCount(0, 48.434, 256), 1, "A  = 0 - 7");
+}
+
+void ZeroAB () {
+   AssertEqual(GetDistinctRealRootCount(0, 0, 1), 0, "A and B = 0 - 1");
+   AssertEqual(GetDistinctRealRootCount(0, 0, -1), 0, "A and B = 0 - 1");
+   AssertEqual(GetDistinctRealRootCount(0, 0, 8), 0, "A and B = 0 - 1");
+   AssertEqual(GetDistinctRealRootCount(0, 0, -8), 0, "A and B = 0 - 1");
+   AssertEqual(GetDistinctRealRootCount(0, 0, 2.4), 0, "A and B = 0 - 1");
 }
 
 void ZeroAC () {
-   AssertEqual(GetDistinctRealRootCount(0, -101, 0), 1, "A and C = 0");
-   AssertEqual(GetDistinctRealRootCount(0, 1, 0), 1, "A and C = 0");
-   AssertEqual(GetDistinctRealRootCount(0, -2, 0), 1, "A and C = 0");
-   AssertEqual(GetDistinctRealRootCount(0, 48, 0), 1, "A and C = 0");
+   AssertEqual(GetDistinctRealRootCount(0, -101, 0), 1, "A and C = 0 - 1");
+   AssertEqual(GetDistinctRealRootCount(0, 1, 0), 1, "A and C = 0 - 2");
+   AssertEqual(GetDistinctRealRootCount(0, -2, 0), 1, "A and C = 0 - 3");
+   AssertEqual(GetDistinctRealRootCount(0, 48, 0), 1, "A and C = 0 -4 ");
 }
 
 void ABC () {    
@@ -144,13 +154,12 @@ void ABC () {
    AssertEqual(GetDistinctRealRootCount(2, 4, 2), 1, "ABC6");
 }
 
-
-
 int main() {
   TestRunner runner;
   runner.RunTest(ZeroA, "ZeroA");
   runner.RunTest(ZeroAC, "ZeroAC");
   runner.RunTest(ABC, "ABC");
+  runner.RunTest(ZeroAB, "ZeroAB");
 
   
   return 0;
