@@ -108,11 +108,39 @@ string FindNameByYear(const map<int, string>& names, int year) {
 class Person {
 public:
   void ChangeFirstName(int year, const string& first_name) {
+    if (first_names.count(year) == 0 && !first_name.empty()) {
     first_names[year] = first_name;
+    }
   }
+  //тест имени
+  string GetName(int year) {
+    return first_names.at(year);
+  }
+  //тест имени
+  bool GetNameB(int year) {
+    if (first_names.count(year)) {
+      return false;
+    }
+    return true;
+  }
+
   void ChangeLastName(int year, const string& last_name) {
+    if (last_names.count(year) == 0 && !last_name.empty()) {
     last_names[year] = last_name;
+    }
   }
+ //тест имени
+  string GetSuName(int year) {
+    return last_names.at(year);
+  }
+  //тест имени
+  bool GetSuNameB(int year) {
+    if (last_names.count(year)) {
+      return false;
+    }
+    return true;
+  }
+
   string GetFullName(int year) {
     const string first_name = FindNameByYear(first_names, year);
     const string last_name = FindNameByYear(last_names, year);
@@ -131,7 +159,32 @@ private:
   map<int, string> last_names;
 };
 
+void TestAddName (){
+  Person Test;
+  Test.ChangeFirstName(2021, "Pavel");
+  Test.ChangeFirstName(2021, "Oleg");
+  AssertEqual(Test.GetName(2021), "Pavel", "Test two name on one year");
+  Test.ChangeFirstName(2020, "");
+  Assert(Test.GetNameB(2020), "Test empty");
+  Test.ChangeFirstName(2024, "Ivan");
+  AssertEqual(Test.GetName(2024), "Ivan", "Test name");
+}
+void TestAddSurName (){
+  Person Test;
+  Test.ChangeLastName(2021, "Pavlov");
+  Test.ChangeLastName(2021, "Olegov");
+  AssertEqual(Test.GetSuName(2021), "Pavlov", "Test two surname on one year");
+  Test.ChangeLastName(2020, "");
+  Assert(Test.GetSuNameB(2020), "Test empty");
+  Test.ChangeLastName(2024, "Ivanov");
+  AssertEqual(Test.GetSuName(2024), "Ivanov", "Test suname");
+}
+
 int main() {
   TestRunner runner;
+  runner.RunTest(TestAddName, "TestAddName");
+  runner.RunTest(TestAddSurName, "TestAddSurName");
+
+
   return 0;
 }
