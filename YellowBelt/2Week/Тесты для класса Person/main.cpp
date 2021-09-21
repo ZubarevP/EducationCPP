@@ -92,7 +92,7 @@ public:
 private:
   int fail_count = 0;
 };
-
+/*
 string FindNameByYear(const map<int, string>& names, int year) {
   string name;
   for (const auto& item : names) {
@@ -103,8 +103,8 @@ string FindNameByYear(const map<int, string>& names, int year) {
     }
   }
   return name;
-}
-
+}*/
+/*
 class Person {
 public:
   void ChangeFirstName(int year, const string& first_name) {
@@ -158,7 +158,8 @@ private:
   map<int, string> first_names;
   map<int, string> last_names;
 };
-
+*/
+/*
 void TestAddName (){
   Person Test;
   Test.ChangeFirstName(2021, "Pavel");
@@ -179,12 +180,28 @@ void TestAddSurName (){
   Test.ChangeLastName(2024, "Ivanov");
   AssertEqual(Test.GetSuName(2024), "Ivanov", "Test suname");
 }
+*/
+void TestGetFullName (){
+  Person Test;
+  Test.ChangeLastName(2021, "Pavlov");
+  Test.ChangeFirstName(2021, "Pavel");
+  AssertEqual(Test.GetFullName(2021), "Pavel Pavlov", "#1 test name and surname");
+  Test.ChangeLastName(2021, "Olegov");
+  Test.ChangeFirstName(2021, "Oleg");
+  AssertEqual(Test.GetFullName(2021), "Oleg Olegov", "#2 test name and surname double enter");
+  Test.ChangeLastName(2000, "Ignatov");
+  AssertEqual(Test.GetFullName(2000), "Ignatov with unknown first name", "#3 test surname without name");
+  Test.ChangeFirstName(1908, "Sahim");
+  AssertEqual(Test.GetFullName(1908), "Sahim with unknown last name", "#4 test name without surname");
+  AssertEqual(Test.GetFullName(100), "Incognito", "#5 test without name and surname");
+}
 
 int main() {
   TestRunner runner;
-  runner.RunTest(TestAddName, "TestAddName");
-  runner.RunTest(TestAddSurName, "TestAddSurName");
+  //runner.RunTest(TestAddName, "TestAddName");
+  //runner.RunTest(TestAddSurName, "TestAddSurName");
+  runner.RunTest(TestGetFullName, "TestGetFullName");
 
 
   return 0;
-}
+}   
