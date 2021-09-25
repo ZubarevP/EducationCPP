@@ -1,11 +1,11 @@
-#pragma once
 
-#include <algorithm>
-#include <string>
-#include "test_runner.h"
+//#include "test_runner.h"
 #include "sum_reverse_sort.h"
+#include <algorithm>
 
-using namespace std;
+int Sum(int x, int y);
+string Reverse(string s);
+void Sort(vector<int>& nums);
 
 int Sum(int x, int y) {
     return x + y;
@@ -15,5 +15,5 @@ reverse(s.begin(), s.end());
 return s;
 }
 void Sort(vector<int>& nums) {
-    sort(begin(nums), end(nums));
+    sort(begin(nums), end(nums));   
 }
