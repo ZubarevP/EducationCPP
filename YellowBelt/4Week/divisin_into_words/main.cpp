@@ -16,7 +16,7 @@ vector<string> SplitIntoWords(const string& s) {
     start = finish;
   }
   return words;
-}
+}0
 
 int main() {
   string s = "C Cpp Java Python";
