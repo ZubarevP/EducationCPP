@@ -6,12 +6,11 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <map>
+#include <vector>
+#include <string>
 
 using namespace std;
-
-string ParseEvent(istream& is) {
-  // Ð ÐµÐ°Ð»Ð¸Ð·ÑƒÐ¹Ñ‚Ðµ ÑÑ‚Ñƒ Ñ„ÑƒÐ½ÐºÑ†Ð¸ÑŽ
-}
 
 void TestAll();
 
@@ -31,15 +30,22 @@ int main() {
       db.Add(date, event);
     } else if (command == "Print") {
       db.Print(cout);
-    } else if (command == "Del") {
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    } else if (command == "Del") { 
+      //получаем разобранное выражение 
       auto condition = ParseCondition(is);
       auto predicate = [condition](const Date& date, const string& event) {
         return condition->Evaluate(date, event);
       };
       int count = db.RemoveIf(predicate);
       cout << "Removed " << count << " entries" << endl;
+
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
     } else if (command == "Find") {
       auto condition = ParseCondition(is);
+      //лямбда функция при итерировании по базе данных на вход принимает очередную дату и событие к ней
       auto predicate = [condition](const Date& date, const string& event) {
         return condition->Evaluate(date, event);
       };
@@ -49,6 +55,9 @@ int main() {
         cout << entry << endl;
       }
       cout << "Found " << entries.size() << " entries" << endl;
+      
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
     } else if (command == "Last") {
       try {
           cout << db.Last(ParseDate(is)) << endl;
