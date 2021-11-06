@@ -9,10 +9,11 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <utility>
 
 using namespace std;
 
-void TestAll();
+void TestAll(); 
 
 int main() {
   TestAll();
@@ -30,10 +31,7 @@ int main() {
       db.Add(date, event);
     } else if (command == "Print") {
       db.Print(cout);
-    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
     } else if (command == "Del") { 
-      //получаем разобранное выражение 
       auto condition = ParseCondition(is);
       auto predicate = [condition](const Date& date, const string& event) {
         return condition->Evaluate(date, event);
@@ -41,23 +39,16 @@ int main() {
       int count = db.RemoveIf(predicate);
       cout << "Removed " << count << " entries" << endl;
 
-    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
     } else if (command == "Find") {
       auto condition = ParseCondition(is);
-      //лямбда функция при итерировании по базе данных на вход принимает очередную дату и событие к ней
       auto predicate = [condition](const Date& date, const string& event) {
         return condition->Evaluate(date, event);
       };
-
       const auto entries = db.FindIf(predicate);
       for (const auto& entry : entries) {
         cout << entry << endl;
       }
       cout << "Found " << entries.size() << " entries" << endl;
-      
-    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
     } else if (command == "Last") {
       try {
           cout << db.Last(ParseDate(is)) << endl;
@@ -70,7 +61,6 @@ int main() {
       throw logic_error("Unknown command: " + command);
     }
   }
-
   return 0;
 }
 

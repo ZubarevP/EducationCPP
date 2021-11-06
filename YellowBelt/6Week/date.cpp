@@ -10,7 +10,7 @@ Date::Date(int Y, int M, int D) {
         Date::AddDay(Da);
     }
 
-string Date::GetDate() {
+string Date::GetDate() const {
         return date;
 }
 
@@ -71,21 +71,21 @@ ostream& operator<< (ostream& stream, Date date) {
     stream << date.GetDate();
     return stream;
 }
-bool operator== (Date& lhs, Date& rhs) {
+bool operator== (const Date& lhs, const  Date& rhs) {
     return lhs.GetDate() == rhs.GetDate();
 }
-bool operator< (Date& lhs, Date& rhs) {
+bool operator< (const  Date& lhs, const  Date& rhs) {
     return lhs.GetDate() < rhs.GetDate();
 }
-bool operator> (Date& lhs, Date& rhs) {
+bool operator> (const  Date& lhs, const  Date& rhs) {
     return lhs.GetDate() > rhs.GetDate();
 }
-bool operator>= (Date& lhs, Date& rhs){
+bool operator>= (const  Date& lhs, const  Date& rhs){
     return lhs.GetDate() >= rhs.GetDate();
 }
-bool operator<= (Date& lhs, Date& rhs) {
+bool operator<= (const  Date& lhs, const  Date& rhs) {
     return lhs.GetDate() <= rhs.GetDate();
 }
-bool operator!= (Date& lhs, Date& rhs) {
+bool operator!= (const Date& lhs, const  Date& rhs) {
     return lhs.GetDate() != rhs.GetDate();
 }

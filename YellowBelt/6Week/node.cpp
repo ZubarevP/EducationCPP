@@ -14,6 +14,10 @@ bool DateComparisonNode::Evaluate(const Date& date_lhs, const string& event_lhs)
         return true;
     }
 
+int DateComparisonNode::GetNum() const  {
+        return Num;
+    }
+
 bool EventComparisonNode::Evaluate(const Date& date_lhs, const string& event_lhs) const {
         switch(cmp_){
             case Comparison::Less : return event_lhs < event_rhs ? true : false;
@@ -26,6 +30,10 @@ bool EventComparisonNode::Evaluate(const Date& date_lhs, const string& event_lhs
         return true;
     }
 
+int EventComparisonNode::GetNum() const  {
+        return Num;
+    }
+
 bool LogicalOperationNode::Evaluate(const Date& date, const string& event) const {
         switch(op_) {
             case LogicalOperation::Or : return left_->Evaluate(date, event) || right_->Evaluate(date, event) ? true : false;
@@ -34,6 +42,14 @@ bool LogicalOperationNode::Evaluate(const Date& date, const string& event) const
         return true;
     }
 
+int LogicalOperationNode::GetNum() const {
+        return Num;
+    }
+
 bool EmptyNode::Evaluate(const Date& date, const string& event) const {
        return true;
+    }
+
+int EmptyNode::GetNum() const  {
+        return Num;
     }

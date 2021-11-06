@@ -11,7 +11,7 @@ class Date {
 public:
     Date(){}
     Date(int Y, int M, int D);
-    string GetDate();
+    string GetDate() const;
     void AddYear (const string& year);
     void AddMounth (const string& mounth);
     void AddDay (const string& day);

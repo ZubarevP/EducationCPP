@@ -4,7 +4,8 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include <set>
+#include <set> 
+#include <vector>
 
 using namespace std;
 
@@ -32,6 +33,20 @@ ostream& operator << (ostream& os, const map<K, V>& m) {
     }
     first = false;
     os << kv.first << ": " << kv.second;
+  }
+  return os << "}";
+}
+
+template <class T>
+ostream& operator << (ostream& os, const vector<T>& v) {
+  os << "{";
+  bool first = true;
+  for (const auto& x : v) {
+    if (!first) {
+      os << ", ";
+    }
+    first = false;
+    os << x;
   }
   return os << "}";
 }
