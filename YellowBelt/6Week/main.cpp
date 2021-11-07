@@ -3,6 +3,7 @@
 #include "condition_parser.h"
 #include "node.h"
 #include "test_runner.h"
+//#include "test_db.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -86,4 +87,17 @@ void TestAll() {
   TestRunner tr;
   tr.RunTest(TestParseEvent, "TestParseEvent");
   tr.RunTest(TestParseCondition, "TestParseCondition");
-}
+ /*
+  tr.RunTest(TestEmptyNode, "Тест 1");
+  tr.RunTest(TestDbAdd, "Тест 2");
+  tr.RunTest(TestDbFind, "Тест 3");
+  tr.RunTest(TestDbLast, "Тест 4");
+  tr.RunTest(TestDbRemoveIf, "Тест 5");
+  tr.RunTest(TestInsertionOrder, "Тест 6");
+  tr.RunTest(TestsMyCustom, "Тест 7");
+  tr.RunTest(TestDatabase, "Тест 8");
+  tr.RunTest(TestDateComparisonNode, "Тест 9");
+  tr.RunTest(TestEventComparisonNode, "Тест 10");
+  tr.RunTest(TestEmptyNode, "Тест 11");
+  */
+ }

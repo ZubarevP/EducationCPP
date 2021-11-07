@@ -46,6 +46,15 @@ int Database::RemoveIf(const function<bool(const Date&, const string&)> &kui) {
           for_date.second.erase(pos, for_date.second.end());
           num += first_size - tempo;
         }
+        vector<Date> key_to_del;
+        for(auto& [date, events] : dateb) {
+          if (events.empty()) {
+            key_to_del.push_back(date);
+          }
+        }
+        for (auto& key_er : key_to_del) {
+          dateb.erase(key_er);
+        }
        return num;
     }
 
@@ -58,7 +67,10 @@ vector<pair<Date, string>> Database::FindIf(const function<bool(const Date&, con
                     return kui(for_date.first, event);
                   }
         );
-        for_each(for_date.second.begin(), pos, [&for_date, &date_event] (string& event) {date_event.push_back(make_pair(for_date.first, event)); } );
+        for_each(for_date.second.begin(), pos, [&for_date, &date_event] 
+                (string& event) {
+                  date_event.push_back(make_pair(for_date.first, event)); 
+                } );
       }
       return date_event;
     }

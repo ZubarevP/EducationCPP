@@ -6,6 +6,8 @@
 #include <map>
 #include <set> 
 #include <vector>
+#include "database.h"
+#include "date.h"
 
 using namespace std;
 
