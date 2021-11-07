@@ -43,7 +43,7 @@ void Date::AddDay (const string& day) {
 }
 
 
-Date ParseDate (istringstream& stream){
+Date ParseDate (istream& stream){
     Date date;
     string line, temp;
     stream >> line;

@@ -19,7 +19,7 @@ private:
    string date;
 };
 
-Date ParseDate (istringstream& stream);
+Date ParseDate (istream& stream);
 
 ostream& operator<< (ostream& stream, Date date);
 bool operator== (const Date& lhs, const Date& rhs);

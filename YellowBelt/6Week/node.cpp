@@ -11,6 +11,7 @@ bool DateComparisonNode::Evaluate(const Date& date_lhs, const string& event_lhs)
             case Comparison::Equal : return date_lhs == date_rhs ? true : false;
             case Comparison::NotEqual : return date_lhs != date_rhs ? true : false;
         }
+        string l = event_lhs;
         return true;
     }
 
@@ -27,6 +28,7 @@ bool EventComparisonNode::Evaluate(const Date& date_lhs, const string& event_lhs
             case Comparison::Equal : return event_lhs == event_rhs ? true : false;
             case Comparison::NotEqual : return event_lhs != event_rhs ? true : false;
         }
+        Date k = date_lhs;
         return true;
     }
 
@@ -47,6 +49,8 @@ int LogicalOperationNode::GetNum() const {
     }
 
 bool EmptyNode::Evaluate(const Date& date, const string& event) const {
+    string l = event;
+    Date k = date;
        return true;
     }
 
