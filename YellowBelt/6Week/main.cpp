@@ -3,7 +3,7 @@
 #include "condition_parser.h"
 #include "node.h"
 #include "test_runner.h"
-//#include "test_db.h"
+#include "test_db.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -14,13 +14,14 @@
 
 using namespace std;
 
+int g_num_of_var = 0;
+
 void TestAll(); 
 
 int main() {
   TestAll();
 
   Database db;
-
   for (string line; getline(cin, line); ) {
     istringstream is(line);
 
@@ -85,9 +86,6 @@ void TestParseEvent() {
 
 void TestAll() {
   TestRunner tr;
-  tr.RunTest(TestParseEvent, "TestParseEvent");
-  tr.RunTest(TestParseCondition, "TestParseCondition");
- /*
   tr.RunTest(TestEmptyNode, "Тест 1");
   tr.RunTest(TestDbAdd, "Тест 2");
   tr.RunTest(TestDbFind, "Тест 3");
@@ -99,5 +97,6 @@ void TestAll() {
   tr.RunTest(TestDateComparisonNode, "Тест 9");
   tr.RunTest(TestEventComparisonNode, "Тест 10");
   tr.RunTest(TestEmptyNode, "Тест 11");
-  */
+  tr.RunTest(TestParseEvent, "Tест 12");
+  tr.RunTest(TestParseCondition, "Tест 13");
  }

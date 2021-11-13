@@ -9,6 +9,8 @@
 
 using namespace std;
 
+extern int g_num_of_var;
+
 shared_ptr<Node> ParseCondition(istream& is);
 
 void TestParseCondition();

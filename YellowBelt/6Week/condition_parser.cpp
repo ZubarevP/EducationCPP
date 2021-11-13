@@ -68,48 +68,32 @@ shared_ptr<Node> ParseExpression(It& current, It end, unsigned precedence) {
   shared_ptr<Node> left;
 
   if (current->type == TokenType::PAREN_LEFT) {
-    ++current; // consume '('
+    ++current;
     left = ParseExpression(current, end, 0u);
     if (current == end || current->type != TokenType::PAREN_RIGHT) {
       throw logic_error("Missing right paren");
     }
-    ++current; // consume ')'
+    ++current;
   } else {
-    //left = после разбора string из вектора токенов
-    //возвращает DateComparisonNode или EventComparisonNode
-    //разобранные на дату/собыетие и на код оператора перед ним
     left = ParseComparison(current, end);
   }
 
   const map<LogicalOperation, unsigned> precedences = {
       {LogicalOperation::Or, 1}, {LogicalOperation::And, 2}
   };
-    //далее цикл работает до момента достижения конца или правой скобки
-    //если это конец или правая скобка то возвращает дата/событие с котдом оператора
   while (current != end && current->type != TokenType::PAREN_RIGHT) {
     if (current->type != TokenType::LOGICAL_OP) {
       throw logic_error("Expected logic operation");
     }
-    //значение типа enum class LogicalOperation  принимает 1(и) или 2(или)
     const auto logical_operation = current->value == "AND" ? LogicalOperation::And
                                                            : LogicalOperation::Or;
     const auto current_precedence = precedences.at(logical_operation);
 
-    /*------------------------------------------------------
-      при начале разбора выражения или при попадании в скобки приоритет == 0
-      любая текущая логическая операция после входа в выражение выполняется и 
-      присходит переход к правому операнду логической операции 
-      если прошлая операция 1(или) а текущая 0(вход в скобки) = завершение цикла 
-      если прошлая операция 1(или) а текущая 1(или) = завершение цикла
-      если прошлая операция 1(или) а текущая 2(вход в скобки) = продложение цикла 
-      если прошлая операция 2(и)  - завершение цикла в любре случае 
-    ------------------------------------------------------*/
-    
     if (current_precedence <= precedence) {
       break;
     }
 
-    ++current; // consume op
+    ++current;
 
     left = make_shared<LogicalOperationNode>(
         logical_operation, left, ParseExpression(current, end, current_precedence)
@@ -131,6 +115,6 @@ shared_ptr<Node> ParseCondition(istream& is) {
   if (current != tokens.end()) {
     throw logic_error("Unexpected tokens after condition");
   }
-
+  g_num_of_var = top_node->GetNum();
   return top_node;
 }

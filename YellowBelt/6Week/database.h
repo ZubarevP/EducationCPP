@@ -4,12 +4,15 @@
 #include <iostream>
 #include <iterator>
 #include <map>
+#include <set>
 #include <sstream>
 #include <string>
 #include <vector>
 #include <utility>
 
 using namespace std;
+
+extern int g_num_of_var;
 
 class Database {
 public:
@@ -20,7 +23,8 @@ public:
     vector<pair<Date, string>> FindIf(const function<bool(const Date&, const string&)> &kui) const;
    
 private:
-    map<Date, vector<string>> dateb; 
+    map<Date, vector<string>> dateb;
+    map<string, set<Date>> eventb;
 };
 
 string ParseEvent(istream& is);
