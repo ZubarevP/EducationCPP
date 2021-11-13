@@ -18,6 +18,7 @@ https://www.coursera.org/learn/c-plus-plus-white
 =================================================================================
 
 **Основы разработки на C++: жёлтый пояс**
+
 **курсовая работа расположена в папке 6WEEK** - https://github.com/ZubarevP/EducationCPP/tree/main/YellowBelt/6Week
 
 (_автор: Московский физико-технический институт, Яндекс & E-Learning Development Fund_)
