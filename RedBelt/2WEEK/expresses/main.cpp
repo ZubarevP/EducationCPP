@@ -17,7 +17,6 @@ public:
         } else {
             int a, b;
             std::cout << std::min(minsum(first,second), abs(first - second)) << '\n';
-            //std::cout << std::min(minsum(first,second),minsum(second,first)) << '\n';
         }
     }
     int minsum (const int& start, const int &finish) {
