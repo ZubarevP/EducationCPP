@@ -37,8 +37,8 @@ private:
 };
 
 int main () {
-    std::cin.tie();
-    std::ios_base::sync_with_stdio();
+    std::cin.tie(nullptr);
+    std::ios_base::sync_with_stdio(false);
 
     uint Q;
     Pair_of_start_and_finish List;

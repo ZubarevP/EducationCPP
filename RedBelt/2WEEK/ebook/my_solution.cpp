@@ -2,82 +2,64 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <set>
+#include <map>
+#include <iterator>
+#include "profile.h"
 
 using namespace std;
+template<typename Iterator>
+class HAF {
+public:
+  HAF (Iterator a, Iterator b)
+  : first(a)
+  , second(b)
+   {}
+  Iterator begin () {
+    return first;
+  }
+  Iterator end () {
+    return second;
+  }
+private:
+  Iterator first;
+  Iterator second;
+};
 
 class ReadingManager {
 public:
-  ReadingManager()
-      : user_page_counts_(MAX_USER_COUNT_ + 1, 0),
-        sorted_users_(),
-        user_positions_(MAX_USER_COUNT_ + 1, -1) {}
-
-  void Read(int user_id, int page_count) {
-    if (user_page_counts_[user_id] == 0) {
-      AddUser(user_id);
-    }
-    user_page_counts_[user_id] = page_count;
-    int& position = user_positions_[user_id];
-    while (position > 0 && page_count > user_page_counts_[sorted_users_[position - 1]]) {
-      SwapUsers(position, position - 1);
-    }
+  void Read(const int &user_id, const int &page_count) {
+    if(USERS.count(user_id)) {
+      PAGES.at( USERS.at(user_id))--;
+      if (PAGES.at( USERS.at(user_id)) <= 0) {
+        PAGES.erase( USERS.at(user_id));
+      }
+    } 
+      USERS[user_id] = page_count;
+      PAGES[page_count]++;
   }
 
-  double Cheer(int user_id) const {
-    if (user_page_counts_[user_id] == 0) {
+  double Cheer(const int &user_id) const {
+    if (!USERS.count(user_id)) {
       return 0;
-    }
-    const int user_count = GetUserCount();
-    if (user_count == 1) {
+    } else if (USERS.size() == 1) {
       return 1;
     }
-    const int page_count = user_page_counts_[user_id];
-    int position = user_positions_[user_id];
-    while (position < user_count &&
-      user_page_counts_[sorted_users_[position]] == page_count) {
-      ++position;
+    auto pos = PAGES.lower_bound(USERS.at(user_id));
+    int size_of_reader = 0;
+    HAF haf = {PAGES.begin(), pos};
+    for (auto LL : haf) {
+      size_of_reader += LL.second;
     }
-    if (position == user_count) {
-        return 0;
-    }
-    // По умолчанию деление целочисленное, поэтому
-    // нужно привести числитель к типу double.
-    // Простой способ сделать это — умножить его на 1.0.
-    return (user_count - position) * 1.0 / (user_count - 1);
+    return 1.0 * size_of_reader / (USERS.size() - 1);
   }
-
 private:
-  // Статическое поле не принадлежит какому-то конкретному
-  // объекту класса. По сути это глобальная переменная,
-  // в данном случае константная.
-  // Будь она публичной, к ней можно было бы обратиться снаружи
-  // следующим образом: ReadingManager::MAX_USER_COUNT.
-  static const int MAX_USER_COUNT_ = 100'000;
-
-  vector<int> user_page_counts_;
-  vector<int> sorted_users_;   // отсортированы по убыванию количества страниц
-  vector<int> user_positions_; // позиции в векторе sorted_users_
-
-  int GetUserCount() const {
-    return sorted_users_.size();
-  }
-  void AddUser(int user_id) {
-    sorted_users_.push_back(user_id);
-    user_positions_[user_id] = sorted_users_.size() - 1;
-  }
-  void SwapUsers(int lhs_position, int rhs_position) {
-    const int lhs_id = sorted_users_[lhs_position];
-    const int rhs_id = sorted_users_[rhs_position];
-    swap(sorted_users_[lhs_position], sorted_users_[rhs_position]);
-    swap(user_positions_[lhs_id], user_positions_[rhs_id]);
-  }
+  map<int, int> USERS;
+  map<int, int> PAGES;
 };
 
 
 int main() {
-  // Для ускорения чтения данных отключается синхронизация
-  // cin и cout с stdio,
-  // а также выполняется отвязка cin от cout
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
 
@@ -100,6 +82,5 @@ int main() {
       cout << setprecision(6) << manager.Cheer(user_id) << "\n";
     }
   }
-
   return 0;
 }
