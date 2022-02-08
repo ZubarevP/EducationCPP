@@ -7,58 +7,66 @@
 #include <iterator>
 #include <sstream>
 #include <iostream>
-#include <set> 
+#include <set>
 #include <utility>
 
+//=============== Update Base ===============
 vector<string_view> SplitIntoWords(string_view line) {
   return SplitBy2(Strip(line), ' ');
 }
 
 void InvertedIndex::Add(string& document) {
-  docs.push_back(move(document));
+  _docs.push_back(move(document));
 
-  const size_t docid = docs.size() - 1;
-  for (const auto& word : SplitIntoWords(docs[docid])) {
-    if(index.count(word) && index[word].back().second == docid) {
-        index[word].back().first++;
+  const size_t docid = _docs.size() - 1;
+  for (const auto& word : SplitIntoWords(_docs[docid])) {
+    if(_index.count(word) && _index[word].back().second == docid) {
+        _index[word].back().first++;
     } else {
-        index[word].push_back({1, docid});
+        _index[word].push_back({1, docid});
     }
   }
 }
 
-void SearchServer::UpdateDocumentBase(istream& document_input) {
+void SearchServer::UDB(istream& document_input) {
   InvertedIndex new_index;
   for (string current_document; getline(document_input, current_document); ) {
     new_index.Add(current_document);
   }
-  index = move(new_index);
+  {
+    lock_guard<mutex> lock(mut);
+    index = move(new_index);
+  }
+}
+
+void SearchServer::UpdateDocumentBase(istream& document_input) {
+  fut.push_back(async([&]{UDB(document_input);}));
+
 }
 
 SearchServer::SearchServer(istream& document_input) {
   UpdateDocumentBase(document_input);
 }
 
-void SearchServer::AddQueriesStream(
-  istream& query_input, ostream& search_results_output
-) {
 
-  const size_t MaxDocId = index.GetMaxDocId();
+//=============== Query ===============
+void SearchServer::AQS(istream& query_input, ostream& search_results_output) {
+  
   vector<size_t> docid_count;
-  docid_count.reserve(MaxDocId);
 
   for (string current_query; getline(query_input, current_query); ) {
+    size_t MaxDocId;
+    {
+      lock_guard<mutex> lock(mut);
+      MaxDocId = index.GetMaxDocId();
+      docid_count.assign(MaxDocId, 0);
 
-    for(size_t i = 0; i < MaxDocId; i++) {
-      docid_count[i] = 0;
-    }
-
-    for (const auto& word : SplitIntoWords(current_query)) {
-      for(const auto [f, s] : index.Lookup(word)){
-        docid_count[s] += f;
+      for (const auto& word : SplitIntoWords(current_query)) {
+        for(const auto [f, s] : index.Lookup(word)){
+          docid_count[s] += f;
+        }
       }
-    }
-    
+    }   
     set<pair<size_t, int>> search_results;
     size_t j = 0;
     for( ; search_results.size() < 5 && j < MaxDocId; j++) {
@@ -83,8 +91,14 @@ void SearchServer::AddQueriesStream(
   }
 }
 
+void SearchServer::AddQueriesStream(
+  istream& query_input, ostream& search_results_output
+) {
+  fut.push_back(async([&]{AQS(query_input, search_results_output);}));
+}
+
 vector<pair<size_t, int>> InvertedIndex::Lookup(string_view word) const {
-  if (auto it = index.find(word); it != index.end()) {
+  if (auto it = _index.find(word); it != _index.end()) {
     return it->second;
   } else {
     return {};

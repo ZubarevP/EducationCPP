@@ -201,15 +201,15 @@ void TestBasicSearch() {
   TestFunctionality(docs, queries, expected);
 }
 
-void TimeTest() {
-  ifstream document_input("in.txt");
-  ifstream query_input("query.txt");
-  ofstream search_results_output("out.txt");
-  LOG_DURATION("Total time");
-  SearchServer srv(document_input);
-  LOG_DURATION("ADD");
-  srv.AddQueriesStream(query_input, search_results_output);
-}
+//void TimeTest() {
+//  ifstream document_input("in.txt");
+//  ifstream query_input("query.txt");
+//  ofstream search_results_output("out.txt");
+//  LOG_DURATION("Total time");
+//  SearchServer srv(document_input);
+//  LOG_DURATION("ADD");
+//  srv.AddQueriesStream(query_input, search_results_output);
+//}
 
 int main() {
   TestRunner tr;
@@ -218,5 +218,5 @@ int main() {
   RUN_TEST(tr, TestHitcount);
   RUN_TEST(tr, TestRanking);
   RUN_TEST(tr, TestBasicSearch);
-  RUN_TEST(tr, TimeTest);
+  //RUN_TEST(tr, TimeTest);
 }
