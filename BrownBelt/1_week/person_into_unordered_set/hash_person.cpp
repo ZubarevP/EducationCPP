@@ -2,6 +2,7 @@
 #include <limits>
 #include <random>
 #include <unordered_set>
+#include <tuple>
 
 using namespace std;
 
@@ -10,7 +11,8 @@ struct Address {
   int building;
 
   bool operator==(const Address& other) const {
-    // реализуйте оператор
+    return  tie(city, street, building) == 
+            tie(other.city, other.street, other.building);
   }
 };
 
@@ -21,16 +23,43 @@ struct Person {
   Address address;
 
   bool operator==(const Person& other) const {
-    // реализуйте оператор
+    return  tie(name, height, weight, address) ==
+            tie(other.name, other.height, other.weight, other.address);
   }
 };
 
 struct AddressHasher {
   // реализуйте структуру
+  hash<string> string_hash;
+  hash<int> int_hash;
+  size_t operator()(const Address& addres) const {
+    const size_t num = 750u;
+    return num * num * string_hash(addres.city) + 
+                 num * string_hash(addres.street) +
+                 int_hash(addres.building);
+  }
 };
 
 struct PersonHasher {
   // реализуйте структуру
+  /*
+  string name;
+  int height;
+  double weight;
+  Address address;
+  */
+  hash<string> str;
+  hash<int> i;
+  hash<double> dob;
+  AddressHasher AH;
+
+  size_t operator()(const Person& person) const {
+    const size_t num = 1025u;
+    return num * num * num * str(person.name) + 
+                 num * num * i(person.height) +
+                       num * dob(person.weight) +
+                             AH(person.address);
+  }
 };
 
 // сгенерированы командой:
