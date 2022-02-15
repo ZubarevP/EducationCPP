@@ -2,6 +2,7 @@
 #include <limits>
 #include <random>
 #include <unordered_set>
+#include <tuple>
 
 using namespace std;
 
@@ -13,12 +14,16 @@ struct Point3D {
   CoordType z;
 
   bool operator==(const Point3D& other) const {
-    // реализуйте оператор
+    return tie(x, y, z) == tie(other.x, other.y, other.z);
   }
 };
 
 struct Hasher {
-  // реализуйте структуру
+  size_t operator()(const Point3D& point) const {
+    const hash<CoordType> a, b, c;
+    const size_t temp = 38;
+    return temp * temp * a(point.x) + temp * b(point.y) + c(point.z);
+  }
 };
 
 void TestSmoke() {
