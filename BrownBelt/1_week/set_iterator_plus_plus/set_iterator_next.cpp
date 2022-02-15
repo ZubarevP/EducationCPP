@@ -44,9 +44,31 @@ private:
   deque<Node> nodes;
 };
 
+Node* Left(Node* me) {
+  if(me->left == nullptr) {
+    return me;
+  }
+  return Left(me->left);
+}
+
+Node* Parent(Node* pr, Node* me) {
+  if(pr->value < me->value) {
+    return me;
+  } else if(me->parent != nullptr) {
+    return Parent(me, me->parent);
+  }
+  return nullptr;
+}
 
 Node* Next(Node* me) {
-
+  if(me->right != nullptr) {
+    return Left(me->right);
+  } else if(me->parent != nullptr && me->value < me->parent->value) {
+    return me->parent;
+  } else if (me->parent != nullptr) {
+    return Parent(me, me->parent);
+  }
+  return nullptr;
 }
 
 
