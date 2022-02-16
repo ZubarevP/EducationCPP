@@ -13,23 +13,81 @@ struct Record {
   string user;
   int timestamp;
   int karma;
+  
+  multimap<string, Record*>::iterator Iter_u;
+  multimap<int, Record*>::iterator Iter_t;
+  multimap<int, Record*>::iterator Iter_k;
 };
 
 // Реализуйте этот класс
 class Database {
+private:
+
+  unordered_map<string, Record> storage;
+  multimap<string, Record*> user_st;
+  multimap<int, Record*> time_st;
+  multimap<int, Record*> karma_st;
+
 public:
-  bool Put(const Record& record);
-  const Record* GetById(const string& id) const;
-  bool Erase(const string& id);
+  bool Put(const Record& record) {
+    auto [Iter, success] = 
+          storage.insert({record.id, record});
+    if(success) {
+      Iter->second.Iter_u = 
+            user_st.insert({record.user, &Iter->second});
+
+      Iter->second.Iter_t = 
+            time_st.insert({record.timestamp, &Iter->second});
+
+      Iter->second.Iter_k = 
+            karma_st.insert({record.karma, &Iter->second});
+      return success;
+    }
+    return success;
+  }
+
+  const Record* GetById(const string& id) const {
+    auto Iter = storage.find(id);
+    return Iter == storage.end() ? nullptr : &Iter->second;
+  }
+
+  bool Erase(const string& id) {
+    auto Find = storage.find(id);
+    if(Find != storage.end()) {
+      karma_st.erase(Find->second.Iter_k);
+      user_st.erase(Find->second.Iter_u);
+      time_st.erase(Find->second.Iter_t);
+      storage.erase(Find);
+      return true;
+    }
+    return false;
+  }
 
   template <typename Callback>
-  void RangeByTimestamp(int low, int high, Callback callback) const;
+  void RangeByTimestamp(int low, int high, Callback callback) const {
+    auto first = time_st.lower_bound(low);
+    auto last = time_st.upper_bound(high);
+    for( ; first != last; first++) {
+      if(!callback(*first->second)) break;
+    }
+  }
 
   template <typename Callback>
-  void RangeByKarma(int low, int high, Callback callback) const;
+  void RangeByKarma(int low, int high, Callback callback) const {
+    auto first = karma_st.lower_bound(low);
+    auto last = karma_st.upper_bound(high);
+    for( ; first != last; first++) {
+      if(!callback(*first->second)) break;
+    }
+  }
 
   template <typename Callback>
-  void AllByUser(const string& user, Callback callback) const;
+  void AllByUser(const string& user, Callback callback) const {
+    auto [first, last] = user_st.equal_range(user);
+    for( ;first != last; first++) {
+      if(!callback(*first->second)) break;
+    }
+  }
 };
 
 void TestRangeBoundaries() {
