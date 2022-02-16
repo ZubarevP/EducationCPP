@@ -42,6 +42,16 @@ string MostExpensiveCategory(
 }
 
 vector<Spending> LoadFromXml(istream& input) {
+  vector<Spending> storage;
+  
+  Document docs = Load(input);
+  const Node& node = docs.GetRoot();
+  for(const auto& l : node.Children()) {
+    auto cat = l.AttributeValue<string>("category");
+    auto am = l.AttributeValue<int>("amount");
+    storage.push_back({cat, am});
+  }
+return storage;
   // Реализуйте эту функцию с помощью библиотеки xml.h
 }
 
