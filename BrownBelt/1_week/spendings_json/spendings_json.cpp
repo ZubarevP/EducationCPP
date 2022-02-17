@@ -42,6 +42,19 @@ string MostExpensiveCategory(
 }
 
 vector<Spending> LoadFromJson(istream& input) {
+  vector<Spending> storage;
+  
+  Document doc = Load(input);
+  
+  const Node& node = doc.GetRoot();
+  for(const auto& backet : node.AsArray()) {
+    storage.push_back({
+      backet.AsMap().at("category").AsString(),
+      backet.AsMap().at("amount").AsInt()
+    });
+  }
+
+  return storage;
   // Реализуйте эту функцию с помощью библиотеки json.h
 }
 

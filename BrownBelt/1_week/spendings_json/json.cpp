@@ -1,15 +1,19 @@
 #include "json.h"
 
-Node::Node(vector<Node> array) : as_array(move(array)) {
+Node::Node(vector<Node> array) 
+  : as_array(move(array)) {
 }
 
-Node::Node(map<string, Node> map) : as_map(move(map)){
+Node::Node(map<string, Node> map) 
+  : as_map(move(map)){
 }
 
-Node::Node(int value) : as_int(value) {
+Node::Node(int value) 
+  : as_int(value) {
 }
 
-Node::Node(string value) : as_string(move(value)) {
+Node::Node(string value) 
+  : as_string(move(value)) {
 }
 
 const vector<Node>& Node::AsArray() const {
@@ -28,12 +32,15 @@ const string& Node::AsString() const {
   return as_string;
 }
 
-Document::Document(Node root) : root(move(root)) {
+Document::Document(Node root) 
+  : root(move(root)) {
 }
 
 const Node& Document::GetRoot() const {
   return root;
 }
+
+//===================================
 
 Node LoadNode(istream& input);
 
