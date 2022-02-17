@@ -1,5 +1,4 @@
 #include "test_runner.h"
-
 #include "ini.h"
 
 #include <sstream>
@@ -55,7 +54,7 @@ void TestDocument() {
   // для реализации функции Load
   Ini::Section* section = &doc.AddSection("one");
   ASSERT_EQUAL(doc.SectionCount(), 1u);
-
+  
   section->insert({"name_1", "value_1"});
   section->insert({"name_2", "value_2"});
 
