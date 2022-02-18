@@ -1,0 +1,33 @@
+#Эти классы имеют имена:
+#
+#SumStatsAggregator
+#
+#MinStatsAggregator
+#
+#MaxStatsAggregator
+#
+#AverageStatsAggregator
+#
+#ModeStatsAggregator
+
+
+#Выполните следующие преобразования кода:
+#
+#удалите из имён потомков StatsAggregator общий суффикс (например, SumStatsAggregator надо переименовать в Sum)
+#
+#удалите из имён тестов общий суффикс (например, TestSumStatsAggregator надо переименовать в TestSum (см. юнит-тесты в файлах stats_aggregator.h и stats_aggregator_test.cpp ниже))
+#
+#поместите классы-потомки StatsAggregator, а также тесты для них в пространство имён StatsAggregators
+#
+#обновите файл main.cpp так, чтобы он корректно работал с новой структурой кода (в т.ч. вызывал юнит-тесты)
+#
+#базовый класс StatsAggregator оставьте в глобальном пространстве имён
+#
+#
+#Сначала мы проверим, что в файле stats_aggregator.h есть классы StatsAggregator, StatsAggregators::Sum, StatsAggregators::Min, StatsAggregators::Max, StatsAggregators::Average, StatsAggregators::Mode и StatsAggregators::Composite, а также соответствующие функции с юнит-тестами.
+#
+#Затем запустим наши внутренние юнит-тесты для классов-потомков StatsAggregator, чтобы убедиться, что они действительно реализуют его интерфейс.
+#
+#Далее мы запустим ваши юнит-тесты из файла stats_aggregator_test.cpp и убедимся, что они срабатывают на неверных реализациях классов и принимают верные.
+#
+#Наконец, мы соберём весь ваш проект и подадим ему в stdin несколько тестов, чтобы убедиться, что программа целиком работает корректно.
