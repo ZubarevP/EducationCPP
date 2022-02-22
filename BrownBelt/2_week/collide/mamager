@@ -1,0 +1,5 @@
+#подключать game_object.h
+
+#содержать реализации классов Unit, Building, Tower и Fence (все они должны наследоваться от GameObject и реализовывать его интерфейс)
+
+#содержать реализацию функции bool Collide(const GameObject& first, const GameObject& second), которая возвращает true, если объекты first и second имеют на плоскости хотя бы одну общую точку, и false в противном случае.

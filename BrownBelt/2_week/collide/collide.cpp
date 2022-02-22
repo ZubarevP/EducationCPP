@@ -8,32 +8,117 @@
 
 using namespace std;
 
-// Определите классы Unit, Building, Tower и Fence так, чтобы они наследовались от
-// GameObject и реализовывали его интерфейс.
-
-class Unit {
+template <typename T>
+class Collider : public GameObject {
 public:
-  explicit Unit(geo2d::Point position);
+  virtual bool Collide(const GameObject& that) const final {
+    return that.CollideWith(static_cast<const T&>(*this));
+  }
 };
 
-class Building {
+class Unit final : public Collider<Unit> {
 public:
-  explicit Building(geo2d::Rectangle geometry);
+  explicit Unit(geo2d::Point position) 
+  : geometry(position)
+  {}
+
+  virtual bool CollideWith(const Unit& that) const override;
+  virtual bool CollideWith(const Building& that) const override;
+  virtual bool CollideWith(const Tower& that) const override;
+  virtual bool CollideWith(const Fence& that) const override;
+
+  geo2d::Point Get() const {
+    return geometry;
+  }
+
+private:
+  geo2d::Point geometry;
 };
 
-class Tower {
+class Building : public Collider<Building> {
 public:
-  explicit Tower(geo2d::Circle geometry);
+  explicit Building(geo2d::Rectangle geometry)
+  : geometry(geometry)
+  {}
+
+  virtual bool CollideWith(const Unit& that) const override;
+  virtual bool CollideWith(const Building& that) const override;
+  virtual bool CollideWith(const Tower& that) const override;
+  virtual bool CollideWith(const Fence& that) const override;  
+
+  geo2d::Rectangle Get() const {
+    return geometry;
+  } 
+
+private:
+  geo2d::Rectangle geometry;
 };
 
-class Fence {
+class Tower : public Collider<Tower> {
 public:
-  explicit Fence(geo2d::Segment geometry);
+  explicit Tower(geo2d::Circle geometry)
+  : geometry(geometry)
+  {}
+
+  virtual bool CollideWith(const Unit& that) const override;
+  virtual bool CollideWith(const Building& that) const override;
+  virtual bool CollideWith(const Tower& that) const override;
+  virtual bool CollideWith(const Fence& that) const override; 
+
+  geo2d::Circle Get() const {
+    return geometry;
+  }
+
+private:
+  geo2d::Circle geometry;
 };
+
+class Fence : public Collider<Fence> {
+public:
+  explicit Fence(geo2d::Segment geometry)
+  : geometry(geometry)
+  {}
+
+  virtual bool CollideWith(const Unit& that) const override;
+  virtual bool CollideWith(const Building& that) const override;
+  virtual bool CollideWith(const Tower& that) const override;
+  virtual bool CollideWith(const Fence& that) const override; 
+  
+  geo2d::Segment Get() const {
+    return geometry;
+  } 
+
+private:
+  geo2d::Segment geometry;
+};
+  #define COLLODEWITH(Class, TypeR) \
+  bool Class::CollideWith(const TypeR& that) const \
+  {return geo2d::Collide(geometry, that.Get());} \
+
+  COLLODEWITH(Unit, Unit)
+  COLLODEWITH(Unit, Tower)
+  COLLODEWITH(Unit, Fence)
+  COLLODEWITH(Unit,Building)
+
+  COLLODEWITH(Building, Tower)
+  COLLODEWITH(Building, Fence)
+  COLLODEWITH(Building, Building)
+  COLLODEWITH(Building, Unit)
+
+  COLLODEWITH(Tower, Building)
+  COLLODEWITH(Tower, Fence)
+  COLLODEWITH(Tower, Tower)
+  COLLODEWITH(Tower, Unit)
+
+  COLLODEWITH(Fence, Fence)
+  COLLODEWITH(Fence, Building)
+  COLLODEWITH(Fence, Tower)
+  COLLODEWITH(Fence, Unit)
+
 
 // Реализуйте функцию Collide из файла GameObject.h
-
 bool Collide(const GameObject& first, const GameObject& second) {
+  return first.Collide(second);
 }
 
 void TestAddingNewObjectOnMap() {
