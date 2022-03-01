@@ -6,18 +6,37 @@
 #include <future>
 #include <mutex>
 #include <queue>
+#include <utility>
 using namespace std;
 
 template <typename T>
 class Synchronized {
 public:
-  explicit Synchronized(T initial = T());
+  explicit Synchronized(T initial = T())
+  :value(move(initial))
+  {
+  }
+    struct Access {
+        lock_guard<mutex> guard;
+        T& ref_to_value;
+    };
 
-  ??? GetAccess();
-  ??? GetAccess() const;
+    struct Const_Access {
+        lock_guard<mutex> geuard;
+        const T& ref_to_value;
+    };
+
+
+  Access GetAccess(){
+      return {lock_guard(m), value};
+  }
+  Const_Access GetAccess() const {
+      return {lock_guard(m), value};
+  }
 
 private:
   T value;
+  mutable mutex m;
 };
 
 void TestConcurrentUpdate() {
