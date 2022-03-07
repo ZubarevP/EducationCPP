@@ -13,27 +13,68 @@ using namespace std;
 template <typename K, typename V, typename Hash = std::hash<K>>
 class ConcurrentMap {
 public:
-  using MapType = unordered_map<K, V, Hash>;
+    using MapType = unordered_map<K, V, Hash>;
 
-  struct WriteAccess {
-    V& ref_to_value;
-  };
+    struct Bring_Map_Mut {
+        MapType Map;
+        mutable mutex Mut;
+    };
 
-  struct ReadAccess {
-    const V& ref_to_value;
-  };
+    struct WriteAccess {
+        lock_guard<mutex> guard;
+        V& ref_to_value;
+    };
 
-  explicit ConcurrentMap(size_t bucket_count);
+    struct ReadAccess {
+        lock_guard<mutex> guard;
+        const V& ref_to_value;
+    };
 
-  WriteAccess operator[](const K& key);
-  ReadAccess At(const K& key) const;
+    explicit ConcurrentMap(size_t bucket_count)
+        : storage(bucket_count)
+    {
+    }
 
-  bool Has(const K& key) const;
+    WriteAccess operator[](const K& key) {
+        return {
+            lock_guard(GetBucket(key).Mut), 
+            GetBucket(key).Map[key]
+        };
+    }
 
-  MapType BuildOrdinaryMap() const;
+    ReadAccess At(const K& key) const {
+        return {
+            lock_guard(GetBucketConst(key).Mut), 
+            GetBucketConst(key).Map.at(key)
+        };
+    }
+
+    bool Has(const K& key) const {
+        auto& bucket = GetBucketConst(key);
+        lock_guard<mutex> guard(bucket.Mut);
+        return bucket.Map.count(key) ? true : false;
+    }
+
+    MapType BuildOrdinaryMap() const {
+        MapType result;
+        for(auto& buck : storage) {
+            lock_guard<mutex> guard(buck.Mut);
+            result.insert(begin(buck.Map), end(buck.Map));
+        }
+        return result;
+    }
 
 private:
-  Hash hasher;
+    Hash hasher;
+    vector<Bring_Map_Mut> storage;
+
+    const Bring_Map_Mut& GetBucketConst(const K& key) const {
+        return storage[hasher(key) % storage.size()];
+    }
+
+    Bring_Map_Mut& GetBucket(const K& key) {
+        return storage[hasher(key) % storage.size()];
+    }
 };
 
 void RunConcurrentUpdates(
