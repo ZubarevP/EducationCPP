@@ -1,6 +1,7 @@
 #include "test_runner.h"
 
 #include <cstddef>  // нужно для nullptr_t
+#include <utility>
 
 using namespace std;
 
@@ -8,28 +9,105 @@ using namespace std;
 template <typename T>
 class UniquePtr {
 private:
-  // ???
+    T* pointer;
 public:
-  UniquePtr();
-  UniquePtr(T * ptr);
-  UniquePtr(const UniquePtr&);
-  UniquePtr(UniquePtr&& other);
-  UniquePtr& operator = (const UniquePtr&);
-  UniquePtr& operator = (nullptr_t);
-  UniquePtr& operator = (UniquePtr&& other);
-  ~UniquePtr();
+    UniquePtr()
+        : pointer(nullptr)
+    {
+    }
 
-  T& operator * () const;
+    UniquePtr(T * ptr) : pointer (ptr) {}
 
-  T * operator -> () const;
+    UniquePtr(const UniquePtr&) = delete;
 
-  T * Release();
+    UniquePtr(UniquePtr&& other)
+        : pointer (other.pointer) 
+    {
+        other.pointer = nullptr;
+    }
 
-  void Reset(T * ptr);
+    UniquePtr& operator = (const UniquePtr&) = delete;
 
-  void Swap(UniquePtr& other);
+    UniquePtr& operator = (nullptr_t) 
+    {
+        auto temp = pointer;
+        pointer = nullptr;
+        if(temp != nullptr)
+        {
+            delete temp;
+        }
+        return *this;
+    }
 
-  T * Get() const;
+    bool operator == (const UniquePtr& other) const 
+    {
+        return pointer == other.pointer;
+    }
+
+    bool operator != (const UniquePtr& other) const 
+    {
+        return !operator== (other);
+    }
+
+    UniquePtr& operator = (UniquePtr&& other)
+    {
+        if(*this != other)
+        {
+            auto temp = pointer;
+            pointer = nullptr;
+            swap(pointer, other.pointer);
+            if(temp != nullptr)
+            {
+                delete temp;
+            }
+        }
+        return *this;
+    }
+
+    ~UniquePtr() 
+    {
+        if(pointer != nullptr)
+        {
+            delete pointer;
+        }
+    }
+
+    T& operator * () const
+    {
+        return *pointer;
+    }
+
+    T * operator -> () const
+    {
+        return pointer;
+    }
+
+    T * Release()
+    {
+        auto temp = pointer;
+        pointer = nullptr;
+        return temp;
+    }
+
+    void Reset(T * ptr)
+    {
+        auto temp = pointer;
+        pointer = ptr;
+        if(temp != nullptr) 
+        {
+            delete temp;
+        }
+    }
+    
+    void Swap(UniquePtr& other)
+    {
+        swap(*this, other);
+    }
+
+    T * Get() const
+    {
+        return pointer; 
+    }
 };
 
 
